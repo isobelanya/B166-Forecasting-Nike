@@ -26,15 +26,14 @@ MSE_sma <- sma_out$lossValue
 sma_out$forecast
 
 #The Holt Winters Forecasting Method:
-#Fit a predictive model using the Holt Winters forecasting method. 
 fittedseries1 <- HoltWinters(Niketimeseries2)
-#This will reveal the values of the smoothing parameters of the Holt Winters method. 
+#This will enable us to see the parameters in the forecasting method 
 fittedseries1$fitted #alpha, betta, and gamma. 
-#this function plots the original time series against the forecasts
+#this function plots the original time series against the forecasts that we have generated
 plot(fittedseries1)
 
 #Forecast 2019
-forecast(fittedseries1,4) #this will plot with the margins of error 
+forecast(fittedseries1,4) #this will plot with the margins of error of 80% and 95% confidence intervals
 plot(forecast(fittedseries1,4))
 
 #Find the MSE by dividing SSE by total data points. 
