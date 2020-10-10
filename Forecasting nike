@@ -1,0 +1,51 @@
+#Install the necessary packages:
+install.packages("rlang")
+install.packages("forecast")
+install.packages("smooth")
+
+library("forecast")
+require(smooth)
+require(Mcomp)
+
+#Download the data set 
+Nike_Profit2 <- read.csv("/Users/anyachen/Downloads/nikedata2.csv")
+Nike_Profit2 
+#Store in time series 
+Niketimeseries2 <-ts(Nike_Profit2,frequency=4,start=c(2008,1))
+Niketimeseries2
+#Plot time series
+plot(Niketimeseries2)
+
+nike_components <- decompose(Niketimeseries2) 
+plot(nike_components) #overview to understand what Holt Winters does, i.e. what components it analyses
+
+#Simple Moving Average:
+sma_out <- sma(Niketimeseries2,h = 4, silent=FALSE, holdout = FALSE)
+#find the SSE for the fitted data from sma.
+MSE_sma <- sma_out$lossValue
+sma_out$forecast
+
+#The Holt Winters Forecasting Method:
+#Fit a predictive model using the Holt Winters forecasting method. 
+fittedseries1 <- HoltWinters(Niketimeseries2)
+#This will reveal the values of the smoothing parameters of the Holt Winters method. 
+fittedseries1$fitted #alpha, betta, and gamma. 
+#this function plots the original time series against the forecasts
+plot(fittedseries1)
+
+#Forecast 2019
+forecast(fittedseries1,4) #this will plot with the margins of error 
+plot(forecast(fittedseries1,4))
+
+#Find the MSE by dividing SSE by total data points. 
+SSEholtwinters <- fittedseries1$SSE
+num_datapoints <- 44
+MSEholtwinters <- SSEholtwinters/num_datapoints
+
+#MSE for both methods
+MSEholtwinters
+MSE_sma
+
+#MAE?
+SSEholtwinters
+SSE_sma
